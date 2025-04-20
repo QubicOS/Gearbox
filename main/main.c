@@ -8,6 +8,7 @@
 #include "freertos/task.h"
 #include "hw_uart_io.h"
 #include "ramdisk_mount.h"
+#include "flash_mount.h"
 
 static const char *TAG = "Gearbox";
 
@@ -22,23 +23,19 @@ void app_main(void)
         ESP_LOGW(TAG, "RAM‑disk init failed, продолжим без него");
     }
 
-    struct stat st;
-if (stat("/ram", &st) == 0) {
-    printf("/ram exists and is a directory\n");
-} else {
-    printf("stat(/ram) failed: %s\n", strerror(errno));
-}
+    // Примонтировать FATFS
+    mount_fatfs();
 
-    FILE *f = fopen("/ram/osinfo", "w");
+    FILE *f = fopen("/mount/flash/osinfo", "w");
     if (!f) {
-        printf("Failed to create /ram/osinfo: %s\n", strerror(errno));
+        printf("Failed to create /mount/flash/osinfo: %s\n", strerror(errno));
         return;
     }
 
     fprintf(f, "Gearbox OS 1.0\nBuilt: %s %s\n", __DATE__, __TIME__);
     fclose(f);
-    printf("Created /ram/osinfo\n");
-    f = fopen("/ram/osinfo", "r");
+    printf("Created /mount/flash/osinfo\n");
+    f = fopen("/mount/flash/osinfo", "r");
 if (f) {
     char buf[64];
     fgets(buf, sizeof(buf), f);
