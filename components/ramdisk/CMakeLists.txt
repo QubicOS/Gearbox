@@ -1,0 +1,10 @@
+idf_component_register(
+    SRCS
+        "src/ramdisk_mount.c"
+        "src/ramfs.c"
+        "src/ramfs_vfs.c"
+    INCLUDE_DIRS
+        "include"
+    PRIV_REQUIRES
+        vfs
+)

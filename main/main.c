@@ -1,22 +1,55 @@
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include <sys/stat.h>
+
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "hw_uart_io.h"
+#include "ramdisk_mount.h"
+
+static const char *TAG = "Gearbox";
 
 void app_main(void)
 {
-    // Инициализация стандартного вывода (UART или USB CDC-ACM)
+    // Настроить UART/CDC-ACM
     io_init();
+    ESP_LOGI(TAG, "Starting Gearbox");
 
-    // Вывод тестового сообщения
-    const char *test_msg = "Starting Gearbox\n";
-    io_write(test_msg, strlen(test_msg));
+    // Примонтировать RAM‑диск
+    if (ramdisk_mount() != ESP_OK) {
+        ESP_LOGW(TAG, "RAM‑disk init failed, продолжим без него");
+    }
 
-    // Бесконечный цикл с выводом сообщения каждую секунду
+    struct stat st;
+if (stat("/ram", &st) == 0) {
+    printf("/ram exists and is a directory\n");
+} else {
+    printf("stat(/ram) failed: %s\n", strerror(errno));
+}
+
+    FILE *f = fopen("/ram/osinfo", "w");
+    if (!f) {
+        printf("Failed to create /ram/osinfo: %s\n", strerror(errno));
+        return;
+    }
+
+    fprintf(f, "Gearbox OS 1.0\nBuilt: %s %s\n", __DATE__, __TIME__);
+    fclose(f);
+    printf("Created /ram/osinfo\n");
+    f = fopen("/ram/osinfo", "r");
+if (f) {
+    char buf[64];
+    fgets(buf, sizeof(buf), f);
+    printf("OS Info: %s\n", buf);
+    fclose(f);
+}
+
+
+    // Основной цикл
     while (1) {
-        const char *loop_msg = "Hello, Gearbox\n";
-        io_write(loop_msg, strlen(loop_msg));
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Задержка 1 секунда
+        ESP_LOGI(TAG, "Hello, Gearbox");
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }

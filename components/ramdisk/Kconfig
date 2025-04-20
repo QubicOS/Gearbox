@@ -1,0 +1,33 @@
+menu "RAM Disk"
+
+config RAMDISK_SIZE
+    int "Размер RAM‑диска (байт)"
+    range 4096 1048576
+    default 65536
+    help
+        Максимальный объём данных, которые можно
+        одновременно хранить в оперативном диске.
+
+config RAMDISK_BASE_PATH
+    string "Точка монтирования (Base path)"
+    default "/ram"
+    help
+        Путь, по которому VFS будет доступен в FS‑дереве.
+
+config RAMDISK_MAX_FILES
+    int "Максимальное число файлов"
+    range 1 64
+    default 8
+    help
+        Сколько разных файлов может существовать
+        одновременно (открытых или закрытых).
+
+config RAMDISK_SECTOR_SIZE
+    int "Размер «сектора» (минимальный шаг realloc)"
+    range 64 4096
+    default 512
+    help
+        При достижении границы буфер расширяется
+        кусками указанного размера.
+
+endmenu
