@@ -1,0 +1,35 @@
+menu "SD Card Configuration"
+
+config SD_MOUNT_POINT
+    string "Mount point for SD card"
+    default "/mount/sd"
+    help
+        The path where the SD card will be mounted.
+
+config SD_BUS_WIDTH
+    int "SD card bus width"
+    range 1 4
+    default 1
+    help
+        Bus width for SD card communication. Set to 1 for 1-bit mode or 4 for 4-bit mode.
+
+config SD_FORMAT_IF_MOUNT_FAILED
+    bool "Format SD card if mount fails"
+    default y
+    help
+        If enabled, the SD card will be formatted if mounting fails.
+
+config SD_MAX_OPEN_FILES
+    int "Maximum number of open files"
+    range 1 10
+    default 4
+    help
+        Maximum number of files that can be open simultaneously.
+
+config SD_ALLOCATION_UNIT_SIZE
+    int "Allocation unit size (bytes)"
+    default 16384
+    help
+        Size of the allocation unit for the FAT filesystem.
+
+endmenu

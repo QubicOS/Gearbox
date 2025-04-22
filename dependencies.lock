@@ -1,0 +1,21 @@
+dependencies:
+  idf:
+    source:
+      type: idf
+    version: 5.5.0
+  jkent/ramfs:
+    component_hash: 3d368fc2bf08400fc61ce5748cefdcf541e2b34d99e6f0a16f1a27ec1d1f793c
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 0.1.0
+direct_dependencies:
+- idf
+- jkent/ramfs
+manifest_hash: 716c1f98ca5745a58b64a14e85d2b016825bef52fe192ef93bbc3f4f95bbf514
+target: esp32
+version: 2.0.0
