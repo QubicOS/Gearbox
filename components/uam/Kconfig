@@ -1,0 +1,9 @@
+menu "esp_uam configuration"
+    config UAM_SD_BACKEND_PATH
+        string "SD‑card path to users.dat"
+        default "/mount/sd/.uam/users.dat"
+
+    config UAM_DEBUG
+        bool "Enable esp_uam debug logs"
+        default n
+endmenu
